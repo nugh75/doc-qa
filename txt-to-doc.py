@@ -31,7 +31,7 @@ def convert_folder(input_folder, output_folder):
             print(f"Convertito: {filename} -> {filename[:-4]}.doc")
 
 # Esempio di utilizzo
-input_folder = "pdfs"
-output_folder = "cartella_output"
+input_folder = "/Users/desi76/repo-git-nugh/doc-qa/pdfs/riassunti txt"
+output_folder = "/Users/desi76/repo-git-nugh/doc-qa/pdfs/riassunti doc"
 convert_folder(input_folder, output_folder)
 print("Conversione completata!")
