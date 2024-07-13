@@ -74,7 +74,7 @@ if uploaded_file is not None:
             st.write(f"**Domanda:** {question}")
             st.write(f"**Risposta:** {result}")
 
-# Gestione del salvataggio dei risultati su file
+# Gestione del salvataggio dei risultati su file e creazione di un pulsante per il download
 filename = st.text_input("Nome del file per salvare le risposte:", "results.txt")
 if st.button("Salva risposte su file"):
     if st.session_state.results:
@@ -82,6 +82,15 @@ if st.button("Salva risposte su file"):
             for i, (question, result) in enumerate(st.session_state.results):
                 file.write(f"Domanda {i + 1}:\n{question}\n")
                 file.write(f"Risposta {i + 1}:\n{result}\n\n")
+
+        # Dopo aver salvato i risultati, mostra un pulsante di download
+        with open(filename, "rb") as f:
+            st.download_button(
+                label="Scarica i risultati",
+                data=f,
+                file_name=filename,
+                mime="text/plain"
+            )
         st.success(f"Risultati salvati in {filename}")
     else:
         st.error("Nessun risultato da salvare.")

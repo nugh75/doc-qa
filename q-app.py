@@ -28,7 +28,7 @@ st.write("Carica un file PDF, scegli il modello e invia le tue domande.")
 
 # Seleziona il modello di embedding e il modello GPT
 model_name = st.selectbox("Scegli un modello Hugging Face", ["sentence-transformers/all-MiniLM-L6-v2", "sentence-transformers/all-MiniLM-L12-v2"])
-gpt_model = st.selectbox("Scegli un modello LLM", ["llama3", "phi3"])
+gpt_model = st.selectbox("Scegli un modello LLM", ["llama3", "phi3","gemma2"])
 temperature = st.slider("Regola la temperatura", 0.0, 1.0, 0.3)
 
 # Carica il file PDF
@@ -51,7 +51,7 @@ if uploaded_file is not None:
     st.success("Knowledge base pronta.")
 
  
-    llm = ChatOpenAI(base_url="http://localhost:11434/v1", temperature=temperature,  model_name=gpt_model)
+    llm = ChatOpenAI(base_url="http://localhost:11434/v1", temperature=temperature,  api_key="not-needed", model_name=gpt_model)
     qa_chain = RetrievalQA.from_chain_type(llm, retriever=knowledge_base.as_retriever())
  
     st.session_state.questions = st.text_area("Inserisci le domande (una per riga)").split('\n')
@@ -67,7 +67,7 @@ if uploaded_file is not None:
             st.write(f"**Domanda:** {question}")
             st.write(f"**Risposta:** {result}")
 
-# Gestione del salvataggio dei risultati su file
+# Gestione del salvataggio dei risultati su file e creazione di un pulsante per il download
 filename = st.text_input("Nome del file per salvare le risposte:", "results.txt")
 if st.button("Salva risposte su file"):
     if st.session_state.results:
@@ -75,6 +75,15 @@ if st.button("Salva risposte su file"):
             for i, (question, result) in enumerate(st.session_state.results):
                 file.write(f"Domanda {i + 1}:\n{question}\n")
                 file.write(f"Risposta {i + 1}:\n{result}\n\n")
+
+        # Dopo aver salvato i risultati, mostra un pulsante di download
+        with open(filename, "rb") as f:
+            st.download_button(
+                label="Scarica i risultati",
+                data=f,
+                file_name=filename,
+                mime="text/plain"
+            )
         st.success(f"Risultati salvati in {filename}")
     else:
         st.error("Nessun risultato da salvare.")
