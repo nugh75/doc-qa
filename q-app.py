@@ -46,6 +46,7 @@ if uploaded_file is not None:
 
     text_splitter = CharacterTextSplitter(separator='\n', chunk_size=3000, chunk_overlap=200)
     text_chunks = text_splitter.split_documents(documents)
+    
     embeddings = HuggingFaceEmbeddings(model_name=model_name)
     knowledge_base = FAISS.from_documents(text_chunks, embeddings)
     st.success("Knowledge base pronta.")
